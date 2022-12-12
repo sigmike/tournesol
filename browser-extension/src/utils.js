@@ -43,7 +43,7 @@ export const fetchTournesolApi = async (path, options = {}) => {
     }
   }
 
-  return fetch(`https://api.tournesol.app/${path}`, fetchOptions).catch(
+  return fetch(`http://localhost:8000/${path}`, fetchOptions).catch(
     console.error
   );
 };

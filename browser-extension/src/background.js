@@ -77,7 +77,7 @@ chrome.webRequest.onHeadersReceived.addListener(
     return { responseHeaders: headers };
   },
   {
-    urls: ['https://tournesol.app/*'],
+    urls: ['http://localhost:3000/*'],
     types: ['sub_frame'],
   },
   [
@@ -352,6 +352,6 @@ chrome.webNavigation.onHistoryStateUpdated.addListener(
     chrome.tabs.sendMessage(event.tabId, 'historyStateUpdated');
   },
   {
-    url: [{ hostEquals: 'tournesol.app' }],
+    url: [{ hostEquals: 'localhost:3000' }],
   }
 );

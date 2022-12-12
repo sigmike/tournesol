@@ -35,7 +35,7 @@ export const fetchTournesolApi = async (url, method, data) => {
   if (data) {
     body['body'] = JSON.stringify(data);
   }
-  return fetch(`https://api.tournesol.app/${url}`, body).catch(console.error);
+  return fetch(`http://localhost:8000/${url}`, body).catch(console.error);
 };
 
 export const addRateLater = async (video_id) => {

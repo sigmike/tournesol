@@ -3,8 +3,9 @@
   "version": "3.3.4",
   "description": "Open Tournesol directly from YouTube",
   "permissions": [
-    "https://tournesol.app/",
-    "https://api.tournesol.app/",
+    "http://localhost/",
+    "http://localhost:3000/",
+    "http://localhost:8000/",
     "https://www.youtube.com/",
     "activeTab",
     "contextMenus",
@@ -51,7 +52,7 @@
       "all_frames": true
     },
     {
-      "matches": ["https://tournesol.app/*"],
+      "matches": ["http://localhost/*"],
       "js": [
         "fetchTournesolToken.js",
         "fetchTournesolRecommendationsLanguages.js"

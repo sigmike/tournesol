@@ -180,7 +180,7 @@ export class TournesolVideoCard {
     tournesolLogo.classList.add('tournesol_score_logo');
     tournesolLogo.setAttribute(
       'src',
-      'https://tournesol.app/svg/tournesol.svg'
+      'http://localhost:3000/svg/tournesol.svg'
     );
     tournesolLogo.setAttribute('alt', 'Tournesol logo');
 

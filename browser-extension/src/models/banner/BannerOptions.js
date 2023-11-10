@@ -16,7 +16,7 @@ export class BannerOptions {
 
 export const defaultBannerOptions = new BannerOptions(
   '2023-09-07T00:00:00Z',
-  '2023-10-01T00:00:00Z',
+  '2023-12-01T00:00:00Z',
   'https://tournesol.app/about/donate?utm_source=extension',
   'https://tournesol.app/about/donate?utm_source=extension',
   '2023_2024_funding_campaing'

@@ -3,18 +3,32 @@
     { TournesolRecommendations },
     { TournesolRecommendationsOptions },
     { Banner },
+    { BannerOptions },
+    { fetchBanner },
   ] = await Promise.all(
     [
       './models/tournesolRecommendations/TournesolRecommendations.js',
       './models/tournesolRecommendations/TournesolRecommendationsOptions.js',
       './models/banner/Banner.js',
+      './models/banner/BannerOptions.js',
+      './models/banner/fetchBanner.js',
     ].map((path) => import(chrome.runtime.getURL(path)))
   );
+
+  const banner = await fetchBanner();
 
   const options = new TournesolRecommendationsOptions({
     videosPerRow: 4,
     rowsWhenExpanded: 3,
-    banner: new Banner(),
+    banner: new Banner(
+      new BannerOptions(
+        banner.date_start,
+        banner.date_end,
+        banner.action_link,
+        banner.action_link,
+        undefined
+      )
+    ),
     parentComponentQuery: '#primary > ytd-rich-grid-renderer',
     displayCriteria: false,
   });

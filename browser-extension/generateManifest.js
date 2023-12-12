@@ -1,6 +1,16 @@
 const env = process.env.TOURNESOL_ENV || 'production';
 
-const urlPermissions = {
+const getForEnv = (object) => {
+  const result = object[env];
+  if (result === undefined) {
+    throw new Error(
+      `No value found for the environment ${JSON.stringify(env)}`
+    );
+  }
+  return result;
+};
+
+const urlPermissions = getForEnv({
   production: [
     'https://tournesol.app/',
     'https://api.tournesol.app/',
@@ -11,26 +21,12 @@ const urlPermissions = {
     'http://localhost:3000/',
     'http://localhost:8000/',
   ],
-}[env];
-if (urlPermissions === undefined) {
-  console.error(
-    `No urlPermissions found for the environment ${JSON.stringify(env)}`
-  );
-  process.exit(1);
-}
+});
 
-const tournesolContentScriptMatches = {
+const tournesolContentScriptMatches = getForEnv({
   production: ['https://tournesol.app/*'],
   'dev-env': ['http://localhost:3000/*'],
-}[env];
-if (tournesolContentScriptMatches === undefined) {
-  console.error(
-    `No tournesolContentScriptMatches found for the environment ${JSON.stringify(
-      env
-    )}`
-  );
-  process.exit(1);
-}
+});
 
 const manifest = {
   name: 'Tournesol Extension',

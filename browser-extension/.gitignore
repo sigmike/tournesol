@@ -1,4 +1,5 @@
 *.zip
 node_modules/
 src/manifest.json
+src/config.js
 src/importWrappers/

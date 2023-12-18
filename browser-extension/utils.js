@@ -33,3 +33,11 @@ export const writeManifest = async (manifest, outputPath) => {
   const content = JSON.stringify(manifest, null, 2);
   await writeFile(outputPath, content);
 };
+
+export const writeConfig = async (config, outputPath) => {
+  let content = '';
+  for (let [key, value] of Object.entries(config)) {
+    content += `export const ${key} = ${JSON.stringify(value)};\n`;
+  }
+  await writeFile(outputPath, content);
+};

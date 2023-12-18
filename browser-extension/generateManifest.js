@@ -1,4 +1,9 @@
-import { getForEnv, generateImportWrappers, writeManifest } from './utils.js';
+import {
+  getForEnv,
+  generateImportWrappers,
+  writeManifest,
+  writeConfig,
+} from './utils.js';
 
 const env = process.env.TOURNESOL_ENV || 'production';
 
@@ -93,7 +98,20 @@ const manifest = {
   ],
 };
 
+const config = getForEnv(
+  {
+    production: {
+      frontendUrl: 'https://tournesol.app/',
+    },
+    'dev-env': {
+      frontendUrl: 'http://localhost:3000/',
+    },
+  },
+  env
+);
+
 (async () => {
   await generateImportWrappers(manifest);
   await writeManifest(manifest, 'src/manifest.json');
+  await writeConfig(config, 'src/config.js');
 })();

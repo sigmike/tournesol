@@ -1,28 +1,26 @@
+import { getForEnv, generateImportWrappers, writeManifest } from './utils.js';
+
 const env = process.env.TOURNESOL_ENV || 'production';
 
-const getForEnv = (object) => {
-  const result = object[env];
-  if (result === undefined) {
-    throw new Error(
-      `No value found for the environment ${JSON.stringify(env)}`
-    );
-  }
-  return result;
-};
+const urlPermissions = getForEnv(
+  {
+    production: ['https://tournesol.app/', 'https://api.tournesol.app/'],
+    'dev-env': [
+      'http://localhost/',
+      'http://localhost:3000/',
+      'http://localhost:8000/',
+    ],
+  },
+  env
+);
 
-const urlPermissions = getForEnv({
-  production: ['https://tournesol.app/', 'https://api.tournesol.app/'],
-  'dev-env': [
-    'http://localhost/',
-    'http://localhost:3000/',
-    'http://localhost:8000/',
-  ],
-});
-
-const tournesolContentScriptMatches = getForEnv({
-  production: ['https://tournesol.app/*'],
-  'dev-env': ['http://localhost:3000/*'],
-});
+const tournesolContentScriptMatches = getForEnv(
+  {
+    production: ['https://tournesol.app/*'],
+    'dev-env': ['http://localhost:3000/*'],
+  },
+  env
+);
 
 const manifest = {
   name: 'Tournesol Extension',
@@ -95,11 +93,7 @@ const manifest = {
   ],
 };
 
-const fs = require('node:fs');
-const content = JSON.stringify(manifest, null, 2);
-fs.writeFile('src/manifest.json', content, (err) => {
-  if (err) {
-    console.error(err);
-    process.exit(1);
-  }
-});
+(async () => {
+  await generateImportWrappers(manifest);
+  await writeManifest(manifest, 'src/manifest.json');
+})();

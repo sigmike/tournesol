@@ -5,8 +5,7 @@
  * This content script is meant to be run on each YouTube page.
  */
 
-// URL of the Tournesol login page
-import { IFRAME_TOURNESOL_LOGIN_URL } from './config.js';
+import { frontendUrl } from './config.js';
 
 // unique HTML id of the extension modal
 const EXT_MODAL_ID = 'x-tournesol-modal';
@@ -17,6 +16,8 @@ const EXT_MODAL_INVISIBLE_STATE = 'none';
 
 // unique HTML id of the Tournesol iframe
 const IFRAME_TOURNESOL_ID = 'x-tournesol-iframe';
+// URL of the Tournesol login page
+const IFRAME_TOURNESOL_LOGIN_URL = `${frontendUrl}login?embed=1&dnt=1`;
 
 /**
  * YouTube doesnt completely load a page, so content script doesn't

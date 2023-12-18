@@ -11,11 +11,7 @@ const getForEnv = (object) => {
 };
 
 const urlPermissions = getForEnv({
-  production: [
-    'https://tournesol.app/',
-    'https://api.tournesol.app/',
-    'https://www.youtube.com/',
-  ],
+  production: ['https://tournesol.app/', 'https://api.tournesol.app/'],
   'dev-env': [
     'http://localhost/',
     'http://localhost:3000/',
@@ -34,6 +30,7 @@ const manifest = {
   description: 'Open Tournesol directly from YouTube',
   permissions: [
     ...urlPermissions,
+    'https://www.youtube.com/',
     'activeTab',
     'contextMenus',
     'storage',

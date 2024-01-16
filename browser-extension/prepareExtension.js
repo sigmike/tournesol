@@ -7,6 +7,10 @@ import {
 } from './prepareTools.js';
 
 const env = process.env.TOURNESOL_ENV || 'production';
+const manifestVersion = parseInt(process.env.MANIFEST_VERSION || '2');
+
+if (manifestVersion != 2 && manifestVersion != 3)
+  throw new Error(`Invalid manifest version: ${manifestVersion}`);
 
 const { version } = await readPackage();
 
@@ -34,7 +38,7 @@ const manifest = {
     'webRequest',
     'webRequestBlocking',
   ],
-  manifest_version: 2,
+  manifest_version: manifestVersion,
   icons: {
     64: 'Logo64.png',
     128: 'Logo128.png',

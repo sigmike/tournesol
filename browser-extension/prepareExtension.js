@@ -14,30 +14,40 @@ if (manifestVersion != 2 && manifestVersion != 3)
 
 const { version } = await readPackage();
 
+const hostPermissions = [
+  ...getForEnv(
+    {
+      production: ['https://tournesol.app/', 'https://api.tournesol.app/'],
+      'dev-env': [
+        'http://localhost/',
+        'http://localhost:3000/',
+        'http://localhost:8000/',
+      ],
+    },
+    env
+  ),
+  'https://www.youtube.com/',
+];
+
+const permissions = [
+  'activeTab',
+  'contextMenus',
+  'storage',
+  'webNavigation',
+  'webRequest',
+  'webRequestBlocking',
+];
+
+const allPermissions =
+  manifestVersion === 2
+    ? { permissions: [...hostPermissions, ...permissions] }
+    : { permissions, host_permissions: hostPermissions };
+
 const manifest = {
   name: 'Tournesol Extension',
   version,
   description: 'Open Tournesol directly from YouTube',
-  permissions: [
-    ...getForEnv(
-      {
-        production: ['https://tournesol.app/', 'https://api.tournesol.app/'],
-        'dev-env': [
-          'http://localhost/',
-          'http://localhost:3000/',
-          'http://localhost:8000/',
-        ],
-      },
-      env
-    ),
-    'https://www.youtube.com/',
-    'activeTab',
-    'contextMenus',
-    'storage',
-    'webNavigation',
-    'webRequest',
-    'webRequestBlocking',
-  ],
+  ...allPermissions,
   manifest_version: manifestVersion,
   icons: {
     64: 'Logo64.png',

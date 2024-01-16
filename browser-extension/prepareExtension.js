@@ -58,7 +58,7 @@ const manifest = {
     page: 'background.html',
     persistent: true,
   },
-  browser_action: {
+  [manifestVersion === 2 ? 'browser_action' : 'action']: {
     default_icon: {
       16: 'Logo16.png',
       64: 'Logo64.png',

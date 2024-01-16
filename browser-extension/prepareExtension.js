@@ -114,21 +114,24 @@ const manifest = {
 
 // Please DO NOT add a trailing slash to front end URL, this prevents
 // creating duplicates in our web analytics tool
-const config = getForEnv(
-  {
-    production: {
-      frontendUrl: 'https://tournesol.app',
-      frontendHost: 'tournesol.app',
-      apiUrl: 'https://api.tournesol.app',
+const config = {
+  manifestVersion,
+  ...getForEnv(
+    {
+      production: {
+        frontendUrl: 'https://tournesol.app',
+        frontendHost: 'tournesol.app',
+        apiUrl: 'https://api.tournesol.app',
+      },
+      'dev-env': {
+        frontendUrl: 'http://localhost:3000',
+        frontendHost: 'localhost:3000',
+        apiUrl: 'http://localhost:8000',
+      },
     },
-    'dev-env': {
-      frontendUrl: 'http://localhost:3000',
-      frontendHost: 'localhost:3000',
-      apiUrl: 'http://localhost:8000',
-    },
-  },
-  env
-);
+    env
+  ),
+};
 
 (async () => {
   await generateImportWrappers(manifest);

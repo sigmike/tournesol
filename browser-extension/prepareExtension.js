@@ -63,10 +63,13 @@ const manifest = {
     128: 'Logo128.png',
     512: 'Logo512.png',
   },
-  background: {
-    page: 'background.html',
-    ...(manifestVersion === 2 && { persistent: true }),
-  },
+  background:
+    manifestVersion === 2
+      ? { page: 'background.html', persistent: true }
+      : {
+          service_worker: 'background.js',
+          type: 'module',
+        },
   [manifestVersion === 2 ? 'browser_action' : 'action']: {
     default_icon: {
       16: 'Logo16.png',

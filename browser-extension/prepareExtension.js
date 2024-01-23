@@ -119,7 +119,7 @@ const manifest = {
       ? youtubeWebAccessibleResources
       : [
           {
-            matches: ['https://www.youtube.com/*'],
+            matches: ['https://*.youtube.com/*'],
             resources: youtubeWebAccessibleResources,
           },
         ],

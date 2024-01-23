@@ -43,6 +43,15 @@ const allPermissions =
     ? { permissions: [...hostPermissions, ...permissions] }
     : { permissions, host_permissions: hostPermissions };
 
+const youtubeWebAccessibleResources = [
+  'Logo128.png',
+  'html/*',
+  'images/*',
+  'utils.js',
+  'models/*',
+  'config.js',
+];
+
 const manifest = {
   name: 'Tournesol Extension',
   version,
@@ -102,14 +111,15 @@ const manifest = {
     open_in_tab: true,
   },
   default_locale: 'en',
-  web_accessible_resources: [
-    'Logo128.png',
-    'html/*',
-    'images/*',
-    'utils.js',
-    'models/*',
-    'config.js',
-  ],
+  web_accessible_resources:
+    manifestVersion === 2
+      ? youtubeWebAccessibleResources
+      : [
+          {
+            matches: ['https://www.youtube.com/*'],
+            resources: youtubeWebAccessibleResources,
+          },
+        ],
 };
 
 // Please DO NOT add a trailing slash to front end URL, this prevents
@@ -134,7 +144,7 @@ const config = {
 };
 
 (async () => {
-  await generateImportWrappers(manifest);
+  await generateImportWrappers(manifest, youtubeWebAccessibleResources);
   await writeManifest(manifest, 'src/manifest.json');
   await writeConfig(config, 'src/config.js');
 })();

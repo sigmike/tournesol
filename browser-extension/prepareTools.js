@@ -11,7 +11,10 @@ export const getForEnv = (object, env) => {
   return result;
 };
 
-export const generateImportWrappers = async (manifest) => {
+export const generateImportWrappers = async (
+  manifest,
+  webAccessibleResources
+) => {
   await Promise.all(
     manifest['content_scripts'].map(async (contentScript) => {
       await Promise.all(
@@ -22,7 +25,7 @@ export const generateImportWrappers = async (manifest) => {
           await mkdir(dirname(path), { recursive: true });
           await writeFile(path, content);
           contentScript.js[i] = newJs;
-          manifest['web_accessible_resources'].push(js);
+          webAccessibleResources.push(js);
         })
       );
     })

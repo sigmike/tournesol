@@ -36,6 +36,7 @@ const permissions = [
   'webNavigation',
   'webRequest',
   'webRequestBlocking',
+  ...(manifestVersion >= 3 ? ['scripting'] : []),
 ];
 
 const allPermissions =

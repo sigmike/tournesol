@@ -120,7 +120,16 @@ const manifest = {
       ? youtubeWebAccessibleResources
       : [
           {
-            matches: ['https://*.youtube.com/*'],
+            matches: [
+              'https://*.youtube.com/*',
+              getForEnv(
+                {
+                  production: 'https://tournesol.app/*',
+                  'dev-env': 'http://localhost:3000/*',
+                },
+                env
+              ),
+            ],
             resources: youtubeWebAccessibleResources,
           },
         ],

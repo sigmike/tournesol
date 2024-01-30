@@ -7,6 +7,7 @@ import {
 } from './prepareTools.js';
 
 const env = process.env.TOURNESOL_ENV || 'production';
+const browser = process.env.EXTENSION_BROWSER || 'firefox';
 const manifestVersion = parseInt(process.env.MANIFEST_VERSION || '2');
 
 if (manifestVersion != 2 && manifestVersion != 3)
@@ -67,10 +68,19 @@ const manifest = {
   background:
     manifestVersion === 2
       ? { page: 'background.html', persistent: true }
-      : {
-          service_worker: 'background.js',
-          type: 'module',
-        },
+      : getForEnv(
+          {
+            firefox: {
+              scripts: ['background.js'],
+              type: 'module',
+            },
+            chrome: {
+              service_worker: 'background.js',
+              type: 'module',
+            },
+          },
+          browser
+        ),
   [manifestVersion === 2 ? 'browser_action' : 'action']: {
     default_icon: {
       16: 'Logo16.png',

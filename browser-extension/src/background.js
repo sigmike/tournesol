@@ -10,7 +10,7 @@ import {
   getSingleSetting,
 } from './utils.js';
 
-import { frontendHost } from './config.js';
+import { frontendHost, manifestVersion } from './config.js';
 
 const RECENT_VIDEOS_RATIO = 0.75;
 const RECENT_VIDEOS_EXTRA_RATIO = 0.5;
@@ -67,26 +67,28 @@ createContextMenu();
  * Tournesol application HTTP answers. It allows the extension to display
  * the application in an iframe without enabling all website to do the same.
  */
-chrome.webRequest.onHeadersReceived.addListener(
-  function (info) {
-    const headers = info.responseHeaders.filter(
-      (h) =>
-        !['x-frame-options', 'frame-options'].includes(h.name.toLowerCase())
-    );
-    return { responseHeaders: headers };
-  },
-  {
-    urls: ['https://tournesol.app/*'],
-    types: ['sub_frame'],
-  },
-  [
-    'blocking',
-    'responseHeaders',
-    // Modern Chrome needs 'extraHeaders' to see and change this header,
-    // so the following code evaluates to 'extraHeaders' only in modern Chrome.
-    chrome.webRequest.OnHeadersReceivedOptions.EXTRA_HEADERS,
-  ].filter(Boolean)
-);
+if (manifestVersion === 2) {
+  chrome.webRequest.onHeadersReceived.addListener(
+    function (info) {
+      const headers = info.responseHeaders.filter(
+        (h) =>
+          !['x-frame-options', 'frame-options'].includes(h.name.toLowerCase())
+      );
+      return { responseHeaders: headers };
+    },
+    {
+      urls: ['https://tournesol.app/*'],
+      types: ['sub_frame'],
+    },
+    [
+      'blocking',
+      'responseHeaders',
+      // Modern Chrome needs 'extraHeaders' to see and change this header,
+      // so the following code evaluates to 'extraHeaders' only in modern Chrome.
+      chrome.webRequest.OnHeadersReceivedOptions.EXTRA_HEADERS,
+    ].filter(Boolean)
+  );
+}
 
 function getDateThreeWeeksAgo() {
   // format a string to properly display years months and day: 2011 -> 11, 5 -> 05, 12 -> 12

@@ -100,11 +100,16 @@
     group: grafana
   notify: Restart Grafana
 
+# Grafana 13's grafana-cli needs an explicit homepath, and the plugins
+# directory must point at the packaged location the grafana user owns.
 - name: Install Grafana worldmap panel plugin
-  community.grafana.grafana_plugin:
-    name: grafana-worldmap-panel
-    version: latest
-    state: present
+  shell: >
+    grafana-cli
+    --homepath /usr/share/grafana
+    --pluginsDir /var/lib/grafana/plugins
+    plugins install grafana-worldmap-panel
+  args:
+    creates: /var/lib/grafana/plugins/grafana-worldmap-panel
   become: yes
   become_user: grafana
   notify: Restart Grafana

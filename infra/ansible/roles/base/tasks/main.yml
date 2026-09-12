@@ -27,6 +27,7 @@
       - dnsutils
       - netcat-traditional
       - python3
+      - python3-debian  # required by the deb822_repository module
       - git
       - build-essential
       - vim

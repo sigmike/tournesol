@@ -9,7 +9,9 @@
 # The default 'postgresql' meta-package resolves to the distro-provided version.
 - name: Install PostgreSQL (distro-provided version)
   apt:
-    name: postgresql
+    name:
+      - postgresql
+      - python3-psycopg2  # required by the postgresql_* Ansible modules
     install_recommends: no
     update_cache: yes
 

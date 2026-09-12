@@ -16,8 +16,16 @@
     state: restarted
     daemon_reload: true
 
+# Grafana 13's grafana-cli needs an explicit homepath and config. Without the
+# data-path override it uses /usr/share/grafana/data, which the grafana user
+# cannot write to, instead of the real database under /var/lib/grafana.
 - name: Reset Grafana admin password
-  shell: grafana-cli admin reset-admin-password {{grafana_admin_password}}
+  shell: >
+    grafana-cli
+    --homepath /usr/share/grafana
+    --config /etc/grafana/grafana.ini
+    --configOverrides cfg:default.paths.data=/var/lib/grafana
+    admin reset-admin-password {{grafana_admin_password}}
   become: yes
   become_user: grafana
 

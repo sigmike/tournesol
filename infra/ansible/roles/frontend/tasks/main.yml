@@ -4,6 +4,14 @@
     system: yes
     create_home: yes
 
+# Recent Debian creates home directories as 0700, but www-data needs to
+# traverse into it to rsync the built frontend to /srv.
+- name: Make the React home directory traversable
+  file:
+    path: /home/react
+    state: directory
+    mode: "0755"
+
 - name: Create remote_tmp directory for React user
   file:
     path: /home/react/.ansible/tmp

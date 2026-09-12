@@ -16,11 +16,12 @@
     creates: /etc/letsencrypt/live/{{grafana_domain_name}}/fullchain.pem
   when: letsencrypt_email is defined
 
-- name: Install GeoIP database
+- name: Install GeoIP database and Nginx GeoIP module
   apt:
     name:
       - geoip-database
       # - geoip-database-extra
+      - libnginx-mod-http-geoip  # provides the geoip_country directive used in nginx-log-format.conf
     install_recommends: no
     update_cache: yes
 
@@ -163,14 +164,14 @@
 
 - meta: flush_handlers
 
-- name: Add Grafana repository signing key
-  apt_key:
-    url: https://apt.grafana.com/gpg.key
-    state: present
-
 - name: Add Grafana repository
-  apt_repository:
-    repo: deb https://apt.grafana.com stable main
+  deb822_repository:
+    name: grafana
+    types: deb
+    uris: https://apt.grafana.com
+    suites: stable
+    components: main
+    signed_by: https://apt.grafana.com/gpg.key
     state: present
 
 - name: Install Grafana
@@ -333,14 +334,22 @@
     owner: grafana
     group: grafana
 
+# Grafana 13's grafana-cli needs an explicit homepath, and the plugins
+# directory must point at the packaged location the grafana user owns.
 - name: Install Grafana plugins
-  community.grafana.grafana_plugin:
-    name: "{{item.name}}"
-    version: "{{item.version}}"
+  shell: >
+    grafana-cli
+    --homepath /usr/share/grafana
+    --pluginsDir /var/lib/grafana/plugins
+    plugins install {{item.name}} {{item.version}}
+  args:
+    creates: "/var/lib/grafana/plugins/{{item.name}}"
   with_items:
     - name: grafana-image-renderer
       version: "3.6.2"
   when: discord_infra_alert_webhook is defined and discord_infra_alert_webhook != ""
+  become: yes
+  become_user: grafana
   notify: Enable and restart Grafana
 
 - meta: flush_handlers

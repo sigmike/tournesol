@@ -48,6 +48,18 @@
   become: yes
   become_user: postgres
 
+# Since PostgreSQL 15 the public schema is no longer writable by every user,
+# so the Django user needs an explicit grant to create its tables there.
+- name: Grant privileges on the public schema to Django database user
+  postgresql_privs:
+    roles: "{{django_database_user}}"
+    login_db: "{{django_database_name}}"
+    type: schema
+    objs: public
+    privs: "CREATE,USAGE"
+  become: yes
+  become_user: postgres
+
 - name: Create Django settings directory
   file:
     path: /etc/tournesol
@@ -134,10 +146,16 @@
     - Restart Gunicorn
     - Notify backend upgrade
 
-- name: Install UV
-  pip:
-    name:
-      - "uv==0.9.9"
+- name: Check the installed uv version
+  command: /usr/local/bin/uv --version
+  register: installed_uv_version
+  failed_when: false
+  changed_when: false
+
+- name: Install the pinned uv version
+  shell:
+    cmd: "curl -LsSf https://astral.sh/uv/{{ django_uv_version }}/install.sh | env UV_INSTALL_DIR=/usr/local/bin INSTALLER_NO_MODIFY_PATH=1 sh"
+  when: django_uv_version not in installed_uv_version.stdout
   become: yes
 
 - name: "Synchronize virtualenv with uv.lock"
